@@ -11,6 +11,7 @@ import sys
 
 includes = set([])
 defines = set([])
+warnings = set([])
 
 f = open(sys.argv[1], "r")
 for line in f.readlines():
@@ -21,11 +22,22 @@ for line in f.readlines():
             includes.add(word)
         elif "-D" == word[:2]:
             defines.add(word)
+        elif "-Wl" == word[:3]:
+            continue
+        elif "-W" == word[:2]:
+            warnings.add(word)
 
-f = open(".clang_complete", "w")
+f = open("flags.txt", "w")
+
+f.write("flags = [\n")
 
 for e in includes:
-    f.write(e + "\n")
+    f.write("'" + e + "',\n")
 
 for e in defines:
-    f.write(e + "\n")
+    f.write("'" + e + "',\n")
+
+for e in warnings:
+    f.write("'" + e + "',\n")
+
+f.write("]\n")
